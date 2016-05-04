@@ -1,0 +1,842 @@
+
+<html>
+<head>
+<title>Introduction to Programming in Ruby | ProPublica Data Institute 2016</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="stylesheet"  href="./style.css">
+<script src="./slides.js"></script>
+</head>
+
+<body>
+  <div>
+    <h2>Introduction to Programming in Ruby</h2>
+
+    <span style="display:block;text-align:center;font-size:20px;">&larr; Use arrow keys &rarr;</span>
+  </div>
+
+  <div>
+    <h2>You are here: Intro to Ruby</h2>
+  </div>
+
+  <div>
+    <h2>Today:<br />Basics of Ruby</br>Tomorrow:<br>Working with data and scraping</h2>
+  </div>
+
+
+  <div class="code">
+    <pre>
+Follow Along
+http://j.mp/TKTK
+    </pre>
+  </div>
+
+  <div>
+    <h2>Day 1 Schedule</h2>
+  </div>
+
+  <div>
+    <h2>1. Set up the room<br />2. Variables, types, conditional, iteration<br />3. Methods and classes</h2>
+  </div>
+  
+  <div>
+    <h2>Set up the room.</h2>
+  </div>
+
+  <div class="code">
+  <pre>
+ruby yourfile.rb
+  </pre>
+  </div>
+
+  <div class="code">
+  <pre>
+$ irb
+irb(main):001:0> puts "hello"
+hello
+=> nil
+  </pre>
+  </div>
+
+  <div class="code">
+  <pre>
+$ irb
+irb(main):001:0> require './my_library'
+MyLibrary
+=> MyLibrary
+  </pre>
+  </div>
+
+
+<div>
+  <h2>Intro.</h2>
+</div>
+
+<div>
+  <h2>Programming is 3 things</h2>
+</div>
+
+<div>
+  <h2>Assignment, Conditional, Iteration</h2>
+</div>
+
+<div>
+  <h2>Assignment</h2>
+</div>
+
+<div class="code">
+<pre>
+name = "Al"
+</pre>
+</div>
+
+<div>
+  <h2>Conditional</h2>
+</div>
+
+<div class="code">
+<pre>
+if name == "Al"
+  puts "Hello #{name}"
+end
+</pre>
+</div>
+
+<div>
+  <h2>Iteration</h2>
+</div>
+
+<div class="code">
+<pre>
+names = ["Al", "Joe", "Sally"]
+names.each do |name|
+  puts "#{name} is here!"
+end
+</pre>
+</div>
+
+<div>
+  <h2>Let's go!</h2>
+</div>
+
+<div>
+  <h2>Strings & Integers</h2>
+</div>
+
+<div class="code">
+<pre>
+address  = 55
+street   = "Broadway"
+city     = "New York"
+state    = "NY"
+zip_code = "10006"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+city + ", " + state
+#=> "New York, NY"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+"#{city}, #{state}"
+#=> "New York, NY"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+"#{address} #{street}"
+#=> "55 Broadway"
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+address + " " + street
+#=> TypeError: String can't be coerced into Fixnum
+  from (irb):10:in `+'
+  from (irb):10
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+address.to_s + " " + street
+#=> "55 Broadway"
+</pre>
+</div>
+
+<div>
+  <h2>Type coercion</h2>
+</div>
+
+<div class="code">
+<pre>
+5.to_s    #=> "5"
+"5".to_i  #=> 5
+5.to_f    #=> 5.0
+</pre>
+</div>
+
+<div class="code">
+<pre>
+str = ""
+str &lt;&lt; city
+str &lt;&lt; ", "
+str &lt;&lt; state
+
+#=> "New York, NY"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+str = ""
+str += city
+str += ", "
+str += state
+
+#=> "New York, NY"
+</pre>
+</div>
+
+
+<div class="code">
+<pre>
+address += address
+#=> 110
+</pre>
+</div>
+
+<div class="code">
+<pre>
+= vs. ==
+</pre>
+</div>
+
+<div class="code">
+<pre>
+a = 3
+b = 3
+
+a == b
+#=> true
+</pre>
+</div>
+
+<div class="code">
+<pre>
+a = 3
+b = 3
+
+if a == b
+  puts 'they match'
+end
+</pre>
+</div>
+
+<div class="code">
+<pre>
+a = 1
+b = 2
+
+if a != b
+  puts "They don't match!"
+end
+</pre>
+</div>
+
+<div class="code">
+<pre>
+a = 3
+b = 3
+
+if a == b
+  puts "they match"
+else
+  puts "they don't match"
+end
+</pre>
+</div>
+
+<div>
+  <h2>Arrays & Hashes</h2>
+</div>
+
+<div class="code">
+<pre>
+[]
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+students = ["Amy", "Joe", "Sally", "Harry"]
+</pre>
+</div>
+
+<div class="code">
+<pre>
+students.pop
+#=> "Harry"
+
+students
+#=> ["Amy", "Joe", "Sally"]
+</pre>
+</div>
+
+<div class="code">
+<pre>
+students.shift
+#=> "Amy"
+
+students
+#=> ["Joe", "Sally"]
+</pre>
+</div>
+
+<div>
+  <h2>What else can I do?</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+(students.methods - Object.methods).sort
+#=> [:&, :*, :+, :-, :<<, :[], :[]=, :all?, :any?, :assoc, ...]
+</pre>
+</div>
+
+<div>
+  <h2>Getting help</h2>
+  <img src="./images/rubydocs.png">
+</div>
+
+
+<div class="code">
+<pre>
+students &lt;&lt; "Amy"
+#=> ["Joe", "Sally", "Amy"]
+</pre>
+</div>
+
+<div class="code">
+<pre>
+students[0]
+#=> "Joe"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+students[1]
+#=> ?
+</pre>
+</div>
+
+<div class="code">
+<pre>
+students[1]
+#=> "Sally"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+person = {}
+</pre>
+</div>
+
+<div class="code">
+<pre>
+person = {}
+person[:first_name] = "Al"
+person[:last_name]  = "Shaw"
+</pre>
+</div>
+
+<div class="code">
+<pre>
+person = {
+  :first_name => "Al",
+  :last_name  => "Shaw"
+}
+</pre>
+</div>
+
+<div class="code">
+<pre>
+person[:first_name]
+#=> "Al"
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+people = []
+people.push(person)
+#=> [{:first_name=>"Al", :last_name=>"Shaw"}]
+</pre>
+</div>
+
+<div>
+  <h2>Iteration</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+students.each do |student|
+  puts "#{student} is in class today"
+end
+
+#=>
+Joe is in class today
+Sally is in class today
+Amy is in class today
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+even_numbers = [2, 4, 6, 8, 10]
+odd_numbers  = []
+# how can we programmatically 
+# fill up this array with odd numbers
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+even_numbers.each do |n|
+  odd_numbers &lt;&lt; n + 1
+end
+
+odd_numbers
+#=> [3, 5, 7, 9, 11]
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+even_numbers.map do |n|
+  n + 1
+end
+#=> [3, 5, 7, 9, 11]
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+even_numbers.map { |n| n + 1 }
+#=> [3, 5, 7, 9, 11]
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+even_numbers
+#=> [2, 4, 6, 8, 10]
+
+even_numbers.map! { |n| n + 1 }
+#=> [3, 5, 7, 9, 11]
+</pre>
+</div>
+
+
+<div>
+  <h2>Methods</h2>
+</div>
+
+<div class="code">
+<pre>
+def add(a, b)
+  a + b
+end
+</pre>
+</div>
+
+<div class="code">
+<pre>
+add(1, 2)
+#=> 3
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+def full_address(address, street, state, zip)
+  "#{address} #{street}, #{state}, {zip}"
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+# Who's in class today?
+def is_in_class(student)
+  attendance = {
+    "Amy"   => true,
+    "Joe"   => true,
+    "Sally" => false,
+    "Harry" => true
+  }
+
+  if attendance[student]
+    "here"
+  else
+    "absent"
+  end
+end
+</div>
+
+<div class="code smaller">
+<pre>
+# Try it
+is_in_class("Sally")
+#=> Absent
+is_in_class("Joe")
+#=> Here
+</pre>
+</div>
+
+<div>
+  <h2>Classes are factories for objects</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+class Student
+  attr_reader :name, :grade
+  def initialize(name, grade)
+    @name  = name
+    @grade = grade
+  end
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+s = Student.new("Sally", 8)
+#=> #&lt;Student:0x1052aca28 @name="Sally", @grade=8&gt;
+
+s.name
+#=> "Sally"
+</pre>
+</div>
+
+<div>
+  <h2>Why should I care?</h2>
+</div>
+
+<div>
+  <h2>Let's build a system that assigns students to teachers!</h2>
+</div>
+
+<div class="code">
+<pre>
+require './registrar.rb'
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:20px;line-height:24px">
+# registrar.rb
+class Student
+  attr_reader :name, :grade, :teacher
+  def initialize(name, grade)
+    @name  = name
+    @grade = grade
+  end
+
+  @@teachers = {
+    "Shanahan"  => 5,
+    "Kovacek"   => 5,
+    "Streich"   => 5,
+    "Ankunding" => 5,
+    "Marks"     => 5
+  }
+
+  def assign_teacher
+    @@teachers.each do |t_name, slots|
+      if slots > 0
+        @teacher = t_name
+        @@teachers[t_name] -= 1
+        puts "#{@name} is assigned to #{t_name}"
+        puts "#{t_name} now has #{slots - 1} slots left"
+        return
+      end
+    end
+  end
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+s = Student.new("Sally", 8)
+#=> #&lt;Student:0x1052aca28 @name="Sally", @grade=8&gt;
+
+s.assign_teacher
+Sally is assigned to Streich
+Streich now has 4 slots left
+
+s.teacher
+#=> "Streich"
+</pre>
+</div>
+
+<div>
+  <h2>How could we change this to randomly assign teachers?</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:20px;line-height:24px">
+# registrar_random.rb
+class Student
+  attr_reader :name, :grade, :teacher
+  def initialize(name, grade)
+    @name  = name
+    @grade = grade
+  end
+
+  @@teachers = {
+    "Shanahan"  => 5,
+    "Kovacek"   => 5,
+    "Streich"   => 5,
+    "Ankunding" => 5,
+    "Marks"     => 5
+  }
+
+  def random_list
+    @@teachers.keys.shuffle
+  end
+
+  def assign_teacher
+    random_list.each do |t_name|
+      slots = @@teachers[t_name]
+      if slots > 0
+        @teacher = t_name
+        @@teachers[t_name] -= 1
+        puts "#{@name} is assigned to #{t_name}"
+        puts "#{t_name} now has #{slots - 1} slots left"
+        return
+      end
+    end
+  end
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+s = Student.new("Sally", 8)
+#=> #&lt;Student:0x007facfb97e870 @name="Sally", @grade=8&gt;
+
+s.assign_teacher
+Sally is assigned to Ankunding
+Ankunding now has 4 slots left
+
+s.teacher
+#=> "Ankunding"
+</pre>
+</div>
+
+<div>
+  <h2>There are still two things wrong with this code. What are they?</h2>
+</div>
+
+<div>
+  <h2>1. What happens when all the slots run out?<br>2. You can assign the same student to another teacher</h2>
+</div>
+
+
+
+<div>
+  <h2>Everything in Ruby is an object</h2>
+</div>
+
+<div class="code">
+<pre>
+1.+(2)
+#=> 3
+</pre>
+</div>
+
+<div class="code">
+<pre>
+class Fixnum
+  def +(num)
+    self - num
+  end
+end
+</pre>
+</div>
+
+<div class="code">
+<pre>
+1 + 2
+#=> -1
+</pre>
+</div>
+
+<div>
+  <h2>I just blew your mind</h2>
+</div>
+
+<div>
+  <h2>A useful example:</h2>
+</div>
+
+
+<div class="code smaller">
+<pre>
+[1,2,3].sum
+NoMethodError: undefined method `sum' for [1, 2, 3]:Array
+  from (irb):1
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+class Array
+  def sum
+    self.reduce(0) {|memo, it| memo += it; memo}
+  end
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+[1,2,3].sum
+#=> 6
+</pre>
+</div>
+
+<div>
+  <h2>RubyGems are bits of code that add functionality to Ruby</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+// In Ruby 2.0, json is installed by default.
+// If you don't have it, run
+$ gem install json
+</pre>
+</div>
+
+<div class="code">
+<pre>
+require 'json'
+</pre>
+</div>
+
+<div>
+  <h2>Let's use the JSON gem to play with the Facebook API</h2>
+</div>
+
+<div class="code">
+<pre>
+require 'json'
+require 'open-uri'
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+JSON.parse(open("http://graph.facebook.com/ashaw").read)
+
+{"gender"=>"male",
+ "id"=>"2902652",
+ "locale"=>"en_US",
+ "username"=>"ashaw",
+ "first_name"=>"Al",
+ "last_name"=>"Shaw",
+ "name"=>"Al Shaw",
+ "link"=>"http://www.facebook.com/ashaw"}
+</pre>
+</div>
+
+<div>
+  <h2>Finally, let's use Nokogiri to do some simple scraping</h2>
+</div>
+
+<div class="code">
+<pre>
+$ gem install nokogiri
+</pre>
+</div>
+
+<div class="code">
+<pre>
+require 'nokogiri'
+require 'open-uri'
+</pre>
+</div>
+
+<div>
+  <h2>FEC.gov</h2>
+  <img style="height:500px" src="http://shaw.al.s3.amazonaws.com/node-nicar/fec-sg.png" />
+</div>
+
+<div class="code smaller">
+<pre>
+url = "http://query.nictusa.com/cgi-bin/dcdev/forms/C00490045/766953/sa/11AI"
+
+doc = Nokogiri::HTML(open(url).read)
+</pre>
+</div>
+
+
+<div class="code smaller">
+<pre>
+names = []
+donors = doc.css("table tr td[align=LEFT]")
+donors.each do |donor|
+  name = donor.css("b")[0].content
+  names &lt;&lt; name
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+names
+
+#=>
+["Marc Andreessen",
+ "Michael Armstrong",
+ "Alan Ashton",
+ "Lynda Balfour",
+ "Frank Baxter",
+ "Glen Beck",
+ "James Berardinelli",
+...
+]
+
+</pre>
+</div>
+
+<div>
+  <h2>Thank you. Questions?</h2>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <h3>Al Shaw &nbsp;&nbsp; ProPublica Data Institute • 2016 &nbsp;&nbsp; @A_L</h3>
+</body>
+</html>
