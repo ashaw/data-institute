@@ -538,13 +538,13 @@ s.name
 
 <div class="code">
 <pre>
-require './registrar.rb'
+require './1_registrar.rb'
 </pre>
 </div>
 
 <div class="code smaller">
 <pre style="font-size:20px;line-height:24px">
-# registrar.rb
+# 1_registrar.rb
 class Student
   attr_reader :name, :grade, :teacher
   def initialize(name, grade)
@@ -595,7 +595,7 @@ s.teacher
 
 <div class="code smaller">
 <pre style="font-size:20px;line-height:24px">
-# registrar_random.rb
+# 2_registrar_random.rb
 class Student
   attr_reader :name, :grade, :teacher
   def initialize(name, grade)
@@ -653,6 +653,191 @@ s.teacher
   <h2>1. What happens when all the slots run out?<br>2. You can assign the same student to another teacher</h2>
 </div>
 
+<div><h2>Let's handle running out of slots</h2></div>
+
+<div class="code smaller">
+<pre style="font-size:20px;line-height:24px">
+# 3_registrar_random_bugfix.rb
+class Student
+  attr_reader :name, :grade, :teacher
+  def initialize(name, grade)
+    @name  = name
+    @grade = grade
+  end
+
+  @@teachers = {
+    "Shanahan"  => 5,
+    "Kovacek"   => 5,
+    "Streich"   => 5,
+    "Ankunding" => 5,
+    "Marks"     => 5
+  }
+
+  def random_list
+    @@teachers.keys.shuffle
+  end
+
+  def assign_teacher
+    random_list.each_with_index do |t_name, idx|
+      slots = @@teachers[t_name]
+      if slots > 0
+        @teacher = t_name
+        @@teachers[t_name] -= 1
+        puts "#{@name} is assigned to #{t_name}"
+        puts "#{t_name} now has #{slots - 1} slots left"
+        return
+      end
+      if idx == random_list.length - 1
+        puts "There's no room for #{@name}"
+      end
+    end
+  end
+end
+</pre>
+</div>
+
+<div>
+  <h2>To test this, we'll use a hint from stuff we'll learn about tomorrow</h2>
+</div>
+
+<div>
+  <h2>RubyGems are bits of code that add functionality to Ruby</h2>
+</div>
+
+
+<div class="code smaller">
+<pre>
+$ gem install faker
+Successfully installed faker-1.6.3
+1 gem installed
+</pre>
+</div>
+
+<div class="code">
+<pre>
+require 'faker'
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+require './3_registrar_random_bugfix'
+students = []
+(0.upto(25)).each do |s| 
+  students << Student.new(Faker::Name.name, 8)
+end
+</pre>
+</div>
+
+<div class="code smaller" >
+<pre style="font-size:18px;line-height:20px;">
+students
+=&gt; [#&lt;Student:0x007fc7cbfca018 @name="Ms. Magdalena Lowe", @grade=8&gt;, 
+#&lt;Student:0x007fc7cbfc96e0 @name="Alivia Wintheiser", 
+@grade=8&gt;, #&lt;Student:0x007fc7cbfc8da8 @name="Jeanie Marks", @grade=8&gt;, 
+...]
+</pre>
+</div>
+
+<div class="code smaller" >
+<pre>
+students.each do |s|
+  s.assign_teacher
+end
+Ms. Magdalena Lowe is assigned to Marks
+Marks now has 4 slots left
+Alivia Wintheiser is assigned to Shanahan
+Shanahan now has 4 slots left
+Jeanie Marks is assigned to Kovacek
+Kovacek now has 4 slots left
+Conrad Durgan is assigned to Kovacek
+Kovacek now has 3 slots left
+Kenneth Schaden is assigned to Marks
+Marks now has 3 slots left
+Bennett Olson I is assigned to Ankunding
+Ankunding now has 4 slots left
+Bud Mante V is assigned to Streich
+Streich now has 4 slots left
+Manuela Cole is assigned to Shanahan
+Shanahan now has 3 slots left
+Arch Schaden is assigned to Kovacek
+Kovacek now has 2 slots left
+Ophelia Carter is assigned to Shanahan
+Shanahan now has 2 slots left
+Lori Kovacek is assigned to Streich
+Streich now has 3 slots left
+Emmie Nienow DDS is assigned to Ankunding
+Ankunding now has 3 slots left
+Cecil Harvey is assigned to Kovacek
+Kovacek now has 1 slots left
+Clay Weber is assigned to Ankunding
+Ankunding now has 2 slots left
+Martin Wisoky is assigned to Marks
+Marks now has 2 slots left
+Orion Wehner is assigned to Kovacek
+Kovacek now has 0 slots left
+Miss Jo Welch is assigned to Ankunding
+Ankunding now has 1 slots left
+Karolann Grant is assigned to Ankunding
+Ankunding now has 0 slots left
+Jerry Franecki is assigned to Shanahan
+Shanahan now has 1 slots left
+Mrs. Taya Harris is assigned to Marks
+Marks now has 1 slots left
+Dusty Simonis V is assigned to Streich
+Streich now has 2 slots left
+Alexanne Ryan is assigned to Shanahan
+Shanahan now has 0 slots left
+Alfreda Effertz is assigned to Marks
+Marks now has 0 slots left
+Kaylie Buckridge IV is assigned to Streich
+Streich now has 1 slots left
+Kenton Rogahn I is assigned to Streich
+Streich now has 0 slots left
+There's no room for Rodger Wilkinson II
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+There's no room for Rodger Wilkinson II
+</pre>
+</div>
+
+<div>
+  <h2>If we really want Ruby to blow up when there's no more slots</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+if idx == random_list.length - 1
+  raise RuntimeError, "There's no room for #{@name}"
+end
+</pre>
+</div>
+
+<div class="code smaller" >
+<pre style="font-size:14px;line-height:18px;">
+Streich now has 0 slots left
+RuntimeError: There's no room for Guiseppe Leffler
+  from /Users/ashaw/rails/data-institute/code/3_registrar_random_bugfix.rb:31:in `block in assign_teacher'
+  from /Users/ashaw/rails/data-institute/code/3_registrar_random_bugfix.rb:21:in `each'
+  from /Users/ashaw/rails/data-institute/code/3_registrar_random_bugfix.rb:21:in `each_with_index'
+  from /Users/ashaw/rails/data-institute/code/3_registrar_random_bugfix.rb:21:in `assign_teacher'
+  from (irb):6:in `block in irb_binding'
+  from (irb):6:in `each'
+  from (irb):6
+  from /usr/local/var/rbenv/versions/2.2.2/bin/irb:11:in `&lt;main&gt;'
+</pre>
+</div>
+
+<div>
+  <h2>Now that we know how to use exceptions, how do we make sure the same student doesn't get assigned to two teachers?</h2>
+</div>
+
+<div>
+  <h2>Let's do some refactoring</h2>
+</div>
 
 
 <div>
