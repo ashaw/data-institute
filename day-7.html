@@ -1,7 +1,7 @@
 
 <html>
 <head>
-<title>Introduction to Programming in Ruby | ProPublica Data Institute 2016</title>
+<title>Introduction to Programming in Ruby | Day 7 | ProPublica Data Institute 2016</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <link rel="stylesheet"  href="./style.css">
@@ -20,7 +20,7 @@
   </div>
 
   <div>
-    <h2>Today:<br />Basics of Ruby</br>Tomorrow:<br>Working with data and scraping</h2>
+    <h2>Today:<br />Basics of Ruby</br>Tomorrow:<br>RubyGems, working with data and scraping</h2>
   </div>
 
 
@@ -58,7 +58,7 @@ hello
   </pre>
   </div>
 
-  <div class="code">
+  <div class="code smaller">
   <pre>
 $ irb
 irb(main):001:0> require './my_library'
@@ -503,6 +503,69 @@ is_in_class("Joe")
 </div>
 
 <div>
+  <h2>Everything in Ruby is an object</h2>
+</div>
+
+<div class="code">
+<pre>
+1.+(2)
+#=> 3
+</pre>
+</div>
+
+<div class="code">
+<pre>
+class Fixnum
+  def +(num)
+    self - num
+  end
+end
+</pre>
+</div>
+
+<div class="code">
+<pre>
+1 + 2
+#=> -1
+</pre>
+</div>
+
+<div>
+  <h2>I just blew your mind</h2>
+</div>
+
+<div>
+  <h2>A useful example:</h2>
+</div>
+
+
+<div class="code smaller">
+<pre>
+[1,2,3].sum
+NoMethodError: undefined method `sum' for [1, 2, 3]:Array
+  from (irb):1
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+class Array
+  def sum
+    self.reduce(0) {|memo, it| memo += it; memo}
+  end
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+[1,2,3].sum
+#=> 6
+</pre>
+</div>
+
+
+<div>
   <h2>Classes are factories for objects</h2>
 </div>
 
@@ -538,7 +601,7 @@ s.name
 
 <div class="code">
 <pre>
-require './1_registrar.rb'
+require './1_registrar'
 </pre>
 </div>
 
@@ -740,10 +803,11 @@ students
 </div>
 
 <div class="code smaller" >
-<pre>
+<pre style="font-size:12px;line-height:16px;">
 students.each do |s|
   s.assign_teacher
 end
+
 Ms. Magdalena Lowe is assigned to Marks
 Marks now has 4 slots left
 Alivia Wintheiser is assigned to Shanahan
@@ -836,191 +900,167 @@ RuntimeError: There's no room for Guiseppe Leffler
 </div>
 
 <div>
-  <h2>Let's do some refactoring</h2>
+  <h2>First, let's do some refactoring</h2>
 </div>
-
 
 <div>
-  <h2>Everything in Ruby is an object</h2>
+  <h2>Let's keep track of which teachers have which students</h2>
 </div>
 
-<div class="code">
-<pre>
-1.+(2)
-#=> 3
-</pre>
-</div>
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+#4_registrar_validated_step1.rb
+class Student
+  MAX_SLOTS = 5
 
-<div class="code">
-<pre>
-class Fixnum
-  def +(num)
-    self - num
+  attr_reader :name, :grade, :teacher
+  def initialize(name, grade)
+    @name  = name
+    @grade = grade
+  end
+
+  @@teachers = {
+    "Shanahan"  => [],
+    "Kovacek"   => [],
+    "Streich"   => [],
+    "Ankunding" => [],
+    "Marks"     => []
+  }
+
+  def random_list
+    @@teachers.keys.shuffle
+  end
+
+  def teachers
+    @@teachers
+  end
+
+  def assign_teacher
+    random_list.each_with_index do |t_name, idx|
+      slots = @@teachers[t_name]
+      if slots.length < MAX_SLOTS
+        @teacher = t_name
+        slots << @name
+        puts "#{@name} is assigned to #{t_name}"
+        puts "#{t_name} now has #{MAX_SLOTS - slots.length} slots left"
+        return
+      end
+      if idx == random_list.length - 1
+        raise RuntimeError, "There's no room for #{@name}"
+      end
+    end
   end
 end
 </pre>
 </div>
 
-<div class="code">
-<pre>
-1 + 2
-#=> -1
+<div class="code smaller">
+<pre style="font-size:16px;line-height:18px;">
+require './4_registrar_validated_step1.rb'
+
+s = Student.new("Al", 8)
+s.assign_teacher
+Al is assigned to Shanahan
+Shanahan now has 4 slots left
+=> nil
+s.teachers
+=> {"Shanahan"=>["Al"], "Kovacek"=>[], "Streich"=>[], "Ankunding"=>[], "Marks"=>[]}
 </pre>
 </div>
 
 <div>
-  <h2>I just blew your mind</h2>
-</div>
-
-<div>
-  <h2>A useful example:</h2>
-</div>
-
-
-<div class="code smaller">
-<pre>
-[1,2,3].sum
-NoMethodError: undefined method `sum' for [1, 2, 3]:Array
-  from (irb):1
-</pre>
+  <h2>Right now, we can keep assigning `s` over and over again until all teachers are full</h2>
 </div>
 
 <div class="code smaller">
-<pre>
-class Array
-  def sum
-    self.reduce(0) {|memo, it| memo += it; memo}
-  end
-end
-</pre>
-</div>
-
-<div class="code smaller">
-<pre>
-[1,2,3].sum
-#=> 6
-</pre>
-</div>
-
-<div>
-  <h2>RubyGems are bits of code that add functionality to Ruby</h2>
-</div>
-
-<div class="code smaller">
-<pre>
-// In Ruby 2.0, json is installed by default.
-// If you don't have it, run
-$ gem install json
-</pre>
-</div>
-
-<div class="code">
-<pre>
-require 'json'
-</pre>
-</div>
-
-<div>
-  <h2>Let's use the JSON gem to play with the Facebook API</h2>
-</div>
-
-<div class="code">
-<pre>
-require 'json'
-require 'open-uri'
-</pre>
-</div>
-
-<div class="code smaller">
-<pre>
-JSON.parse(open("http://graph.facebook.com/ashaw").read)
-
-{"gender"=>"male",
- "id"=>"2902652",
- "locale"=>"en_US",
- "username"=>"ashaw",
- "first_name"=>"Al",
- "last_name"=>"Shaw",
- "name"=>"Al Shaw",
- "link"=>"http://www.facebook.com/ashaw"}
-</pre>
-</div>
-
-<div>
-  <h2>Finally, let's use Nokogiri to do some simple scraping</h2>
-</div>
-
-<div class="code">
-<pre>
-$ gem install nokogiri
-</pre>
-</div>
-
-<div class="code">
-<pre>
-require 'nokogiri'
-require 'open-uri'
-</pre>
-</div>
-
-<div>
-  <h2>FEC.gov</h2>
-  <img style="height:500px" src="http://shaw.al.s3.amazonaws.com/node-nicar/fec-sg.png" />
-</div>
-
-<div class="code smaller">
-<pre>
-url = "http://query.nictusa.com/cgi-bin/dcdev/forms/C00490045/766953/sa/11AI"
-
-doc = Nokogiri::HTML(open(url).read)
-</pre>
-</div>
-
-
-<div class="code smaller">
-<pre>
-names = []
-donors = doc.css("table tr td[align=LEFT]")
-donors.each do |donor|
-  name = donor.css("b")[0].content
-  names &lt;&lt; name
-end
-</pre>
-</div>
-
-<div class="code smaller">
-<pre>
-names
-
-#=>
-["Marc Andreessen",
- "Michael Armstrong",
- "Alan Ashton",
- "Lynda Balfour",
- "Frank Baxter",
- "Glen Beck",
- "James Berardinelli",
+<pre style="">
+(0.upto(25)).each {|i| s.assign_teacher }
 ...
-]
-
+s.teachers
+=> {"Shanahan"=>["Al", "Al", "Al", "Al", "Al"], 
+"Kovacek"=>["Al", "Al", "Al", "Al", "Al"], 
+"Streich"=>["Al", "Al", "Al", "Al", "Al"], 
+"Ankunding"=>["Al", "Al", "Al", "Al", "Al"], 
+"Marks"=>["Al", "Al", "Al", "Al", "Al"]}
 </pre>
 </div>
 
 <div>
-  <h2>Thank you. Questions?</h2>
+  <h2>How can we prevent this?</h2>
 </div>
 
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+#5_registrar_validated_step2.rb
+class Student
+  MAX_SLOTS = 5
 
+  attr_reader :name, :grade, :teacher
+  def initialize(name, grade)
+    @name  = name
+    @grade = grade
+    @assigned = false
+  end
 
+  @@teachers = {
+    "Shanahan"  => [],
+    "Kovacek"   => [],
+    "Streich"   => [],
+    "Ankunding" => [],
+    "Marks"     => []
+  }
 
+  def random_list
+    @@teachers.keys.shuffle
+  end
 
+  def teachers
+    @@teachers
+  end
 
+  def assign_teacher
+    raise RuntimeError, "#{@name} is already assigned" if @assigned
+    random_list.each_with_index do |t_name, idx|
+      slots = @@teachers[t_name]
+      if slots.length < MAX_SLOTS
+        @teacher = t_name
+        slots << @name
+        @assigned = true
+        puts "#{@name} is assigned to #{t_name}"
+        puts "#{t_name} now has #{MAX_SLOTS - slots.length} slots left"
+        return
+      end
+      if idx == random_list.length - 1
+        raise RuntimeError, "There's no room for #{@name}"
+      end
+    end
+  end
+end
+</pre>
+</div>
 
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+require './5_registrar_validated_step2'
 
+s = Student.new("Al", 8)
+=> #&lt;Student:0x007fd66abe0698 @name="Al", @grade=8, @assigned=false&gt;
+s.assign_teacher
+Al is assigned to Ankunding
+Ankunding now has 4 slots left
 
+s.assign_teacher
+RuntimeError: Al is already assigned
+  from /Users/ashaw/rails/data-institute/code/5_registrar_validated_step2.rb:28:in `assign_teacher'
+  from (irb):4
+  from /usr/local/var/rbenv/versions/2.2.2/bin/irb:11:in `&lt;main&gt;'
+</pre>
+</div>
 
+<div>
+  <h2>Homework + Questions</h2>
+</div>
 
-  
   
   <h3>Al Shaw &nbsp;&nbsp; ProPublica Data Institute • 2016 &nbsp;&nbsp; @A_L</h3>
 </body>
