@@ -27,8 +27,97 @@
   </div>
 
   <div>
+    <h2>Back to our classroom code</h2>
+  </div>
+
+  <div>
+    <h2>Let's say the principal wants us to keep data for which students are in which classes</h2>
+  </div>
+
+
+  <div>
+    <h2>JSON<br>(JavaScript Object Notation)</h2>
+  </div>
+
+
+  <div class="code smaller">
+    <pre>
+# 7_roll_call.rb
+require 'json'
+require 'faker'
+require './6_registrar_final'
+
+(0.upto(24)).each do |i|
+  s = Student.new(Faker::Name.name, 8)
+  s.assign_teacher
+end
+
+File.open("./roll_call.json", "w") do |f|
+  f.write Student.roll_call.to_json
+end
+    </pre>
+  </div>
+
+  <div>
+    <h2>roll_call.json</h2>
+  </div>
+
+  <div class="code smaller">
+    <pre style="font-size:14px;line-height:18px;">
+{
+  "Shanahan": ["Vernice Price", "Clovis Flatley", "Raegan Boehm", "Clara Kemmer", "Willis Abernathy"],
+  "Kovacek": ["Dorcas Kuhlman", "Deven Monahan", "Linda Sawayn", "Veda Blick IV", "Adolphus Terry"],
+  "Streich": ["Dylan Keebler IV", "Giuseppe Veum Jr.", "Pearlie Schaefer", "Kaden Kautzer Sr.", "Ms. Adam Grady"],
+  "Ankunding": ["Miss Darion Herman", "Mrs. Annabel Witting", "Vivienne Carter", "Rhoda Bechtelar", "Mattie Goodwin MD"],
+  "Marks": ["Nickolas Schoen V", "Eldora Smitham", "Helen Kshlerin", "Josefa Fritsch", "Leslie Miller"]
+}    </pre>
+  </div>
+
+  <div>
+    <h2>Try pasting it into your browser console</h2>
+  </div>
+
+
+  <div class="code smaller">
+    <pre font-size:16px;line-height:18px;>
+require 'json'
+
+roll = JSON.parse(File.open("roll_call.json").read)
+=> {"Shanahan"=>["Vernice Price", "Clovis Flatley", "Raegan Boehm"...
+    </pre>
+  </div>
+
+  <div class="code smaller">
+    <pre style="font-size:16px;line-height:18px;">
+roll["Shanahan"]
+=> ["Vernice Price", "Clovis Flatley", "Raegan Boehm", "Clara Kemmer", "Willis Abernathy"]
+    </pre>
+  </div>
+
+  <div>
     <h2>RubyGems are bits of code that add functionality to Ruby</h2>
   </div>
+
+  <div>
+    <h2>RestClient is a "gem" to get and post URLs</h2>
+  </div>
+
+
+  <div class="code">
+    <pre>
+$ gem install restclient
+    </pre>
+  </div>
+
+
+  <div class="code smaller">
+    <pre>
+require 'restclient'
+RestClient.get("http://google.com")
+=> "&lt;!doctype html&gt;&lt;html itemscope=\"\" itemtype...
+    </pre>
+  </div>
+
 
 
 
