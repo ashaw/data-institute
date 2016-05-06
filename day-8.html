@@ -73,6 +73,12 @@ end
 }    </pre>
   </div>
 
+
+  <div>
+    <h2>How is this useful?</h2>
+  </div>
+
+
   <div>
     <h2>Try pasting it into your browser console</h2>
   </div>
@@ -135,6 +141,10 @@ RestClient.get("http://google.com")
   </div>
 
   <div>
+    <h2 style="font-size:40px;letter-spacing:-1px;">http://fec.gov/finance/disclosure/efile_search.shtml</h2>
+  </div>
+
+  <div>
     <img src="./images/campfin-docs-committees.png">
   </div>
 
@@ -151,6 +161,243 @@ RestClient.get("http://google.com")
 https://api.propublica.org/campaign-finance/v1/2016/committees/C00577130.json
   </pre>
 </div>
+
+  <div class="code smaller">
+  <pre style="font-size:18px;">
+require 'restclient'
+
+url = "https://api.propublica.org/campaign-finance/v1/2016/committees/C00577130.json"
+key = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
+resp = RestClient.get(url, {"X-API-Key" => key})
+=> "{\"status\":\"OK\",\"copyright\":\"Copyright (c) 2016 ProPublica Inc....
+  </pre>
+</div>
+
+  <div class="code smaller">
+  <pre style="font-size:18px;">
+data = JSON.parse(resp)
+=> {"status"=>"OK", "copyright"=>"Copyright (c) 2016 ProPublica Inc. All Rights Reserved." ...
+  </pre>
+</div>
+
+  <div class="code smaller">
+  <pre style="font-size:18px;">
+data['results'][0]['total_contributions']
+=> 182846078.87
+  </pre>
+</div>
+
+<div>
+  <h2>Let's say we want to grab Hillary, Bernie and Trump contributions and disubursements, and stash them in a spreadsheet</h2>
+</div>
+
+<div>
+  <h2>Remember, spreadsheets are just comma separated files with a header row</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+# 8_campaign_contributions.rb
+require 'restclient'
+require 'json'
+
+KEY = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
+
+# bernie, hillary, trump
+# look up IDs here: http://fec.gov/finance/disclosure/efile_search.shtml
+committees = ["C00577130", "C00575795", "C00580100"]
+out = "committee_id,total_contributions,total_disbursements\n"
+
+def url(committee_id)
+  "https://api.propublica.org/campaign-finance/v1/2016/committees/#{committee_id}.json"
+end
+
+committees.each do |c|
+  resp = RestClient.get(url(c), {"X-API-Key" => KEY})
+  data = JSON.parse(resp)
+  contributions = data['results'][0]['total_contributions']
+  disbursements = data['results'][0]['total_disbursements']
+  out << "#{c},#{contributions},#{disbursements}\n"
+end
+
+File.open("campfin.csv", "w") do |f|
+  f.write out
+end
+</pre>
+</div>
+
+<div>
+  <h2>campfin.csv</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+committee_id,total_contributions,total_disbursements
+C00577130,182846078.87,168314350.27
+C00575795,169552497.08,157763659.51
+C00580100,12562427.5,47185423.71
+</pre>
+</div>
+
+<div>
+  <img src="./images/campfin-excel.png">
+</div>
+
+<div>
+  <h2>Remember our classroom JSON? Let's put that into a spreadsheet</h2>
+</div>
+
+
+<div>
+  <h2>This is a little trickier because we want to store the students in columns under a teacher name header</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+# reminder
+require 'json'
+data = JSON.parse(File.open("roll_call.json").read)
+
+data.keys
+=> ["Shanahan", "Kovacek", "Streich", "Ankunding", "Marks"]
+
+data.values
+=> [["Vernice Price", "Clovis Flatley", "Raegan Boehm", "Clara Kemmer", "Willis Abernathy"], ...]
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+# 9_classroom_sheet.rb
+require 'json'
+
+data = JSON.parse(File.open("roll_call.json").read)
+out = ""
+
+# first let's loop through all of the teachers
+# to put them in the header row
+out << data.keys.join(",") + "\n"
+
+# let's transform the array of arrays from
+# [class1student1, class1student2, class1student3],...
+# to
+# [class1student1, class2student1, class3student1],..
+
+# normally this would be hard, but
+# Ruby can do this for us with Array#transpose
+column_classrooms = data.values.transpose
+
+# now we just need to stick them in the sheet
+column_classrooms.each do |cc|
+  out << cc.join(",") + "\n"
+end
+
+File.open("roll_call.csv", "w") do |f|
+  f.write out
+end
+</pre>
+</div>
+
+<div>
+  <h2>roll_call.csv</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+Shanahan,Kovacek,Streich,Ankunding,Marks
+Vernice Price,Dorcas Kuhlman,Dylan Keebler IV,Miss Darion Herman,Nickolas Schoen V
+Clovis Flatley,Deven Monahan,Giuseppe Veum Jr.,Mrs. Annabel Witting,Eldora Smitham
+Raegan Boehm,Linda Sawayn,Pearlie Schaefer,Vivienne Carter,Helen Kshlerin
+Clara Kemmer,Veda Blick IV,Kaden Kautzer Sr.,Rhoda Bechtelar,Josefa Fritsch
+Willis Abernathy,Adolphus Terry,Ms. Adam Grady,Mattie Goodwin MD,Leslie Miller
+</pre>
+</div>
+
+<div>
+  <h2>Some APIs Return Data in XML</h2>
+</div>
+
+<div class="code">
+<pre>
+$ gem install crack
+</pre>
+</div>
+
+<div class="code">
+<pre>
+require 'crack'
+require 'restclient'
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+url = "https://api.propublica.org/campaign-finance/v1/2016/committees/C00577130.xml"
+key = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
+resp = RestClient.get(url, {"X-API-Key" => key})
+=> "&lt;?xml version=\"1.0\"?&gt;\n&lt;result_set&gt;\n   &lt;status&gt;OK&lt;/status&gt;\n...
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+data = Crack::XML.parse(resp)
+=> {"result_set"=>{"status"=>"OK", "copyright"=>"Copyright (c) 2016 ProPublica Inc. ...
+</pre>
+</div>
+
+<div>
+  <h2>Look familiar?</h2>
+</div>
+
+<div>
+  <h2>NB: Some APIs require authentication</h2>
+</div>
+
+<div>
+  <h2>On Your Own: Grab some data from an API, collect it in a spreadsheet</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+API examples
+Some of these require you to sign up for keys
+
+PP Congress API   https://goo.gl/ZPVoFA
+Google Books API  https://goo.gl/S7Lff6
+Wikipedia API     https://goo.gl/qcec2x
+Giphy API         https://goo.gl/FMZgaX
+Flickr search     https://goo.gl/oU2z9w
+Capitol Words     http://goo.gl/o3aP9w
+EPA Envirofacts   https://goo.gl/mVlny9
+USGS Earthquakes  http://goo.gl/2CQT0M
+Brooklyn Museum   https://goo.gl/BMLd6E
+HuffPo Pollster   http://goo.gl/mY5EaZ
+Dark Sky          https://goo.gl/h9FI4A
+iTunes search     https://goo.gl/U0aRIq
+Spotify           https://goo.gl/fIfgPd
+Zillow            http://goo.gl/C34lar
+</pre>
+</div>
+
+<div>
+  <h2>2. What is web scraping?</h2>
+</div>
+
+<div>
+  <h2>We'll use what we learned with APIs to grab web resources that aren't designed to be read by computers</h2>
+</div>
+
+<div>
+  <h2>Tools: RestClient + Nokogiri</h2>
+</div>
+
+<div class="code">
+<pre>
+$ gem install nokogiri
+</pre>
+</div>
+
 
 
 
