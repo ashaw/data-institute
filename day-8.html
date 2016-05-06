@@ -398,6 +398,23 @@ $ gem install nokogiri
 </pre>
 </div>
 
+<div class="code smaller">
+<pre style="font-size:18px;">
+require 'restclient'
+require 'nokogiri'
+resp = Nokogiri::HTML(RestClient.get("http://google.com"))
+=> #&lt;Nokogiri::HTML::Document:0x3fda3aace8fc 
+name="document" children=[#&lt;Nokogiri::XML::DTD:0x3fda3aace5a0 name="html"&gt;...
+</pre>
+</div>
+
+<div>
+<img src="./images/nokogiripocalypse.png">
+</div>
+
+<div>
+  <h2>It's not that bad!</h2>
+</div>
 
 
 

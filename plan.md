@@ -20,3 +20,9 @@ Day 8: 4 hour
   * Scraper wrap up: resources on more complex tools for scraping dynamic sites
   * Stretch goal (small taste of web frameworks w/ Sinatra)
   HOMEWORK: finish your scraper if you didn't in class
+
+
+  scraper ideas:
+
+  https://www.armedicalboard.org/public/notices.aspx
+  http://elections.tn.gov/county-results.php?OfficebyCounty=President%20of%20the%20United%20States&Party=Republican
