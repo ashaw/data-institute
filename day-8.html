@@ -314,6 +314,102 @@ Willis Abernathy,Adolphus Terry,Ms. Adam Grady,Mattie Goodwin MD,Leslie Miller
 </div>
 
 <div>
+  <h2>Putting it together: Let's write a class to take any n committee IDs and write the data out to a spreadsheet</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+# 10_committee_sheet.rb
+require 'restclient'
+require 'json'
+
+KEY = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
+
+class CommitteeSheet
+  def initialize(committees)
+    # array like ["C00577130", "C00575795", "C00580100"]
+    @committees = committees
+    @out = "committee_id,total_contributions,total_disbursements\n"
+  end
+
+  def url(committee_id)
+    "https://api.propublica.org/campaign-finance/v1/2016/committees/#{committee_id}.json"
+  end
+
+  def build
+    @committees.each do |c|
+      resp = RestClient.get(url(c), {"X-API-Key" => KEY})
+      data = JSON.parse(resp)
+      contributions = data['results'][0]['total_contributions']
+      disbursements = data['results'][0]['total_disbursements']
+      @out << "#{c},#{contributions},#{disbursements}\n"
+    end
+  end
+
+  def write
+    File.open("committees.csv", "w") do |f|
+      f.write out
+    end
+  end
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+require './10_committee_sheet'
+
+cs = CommitteeSheet.new(["C00577130", "C00575795", "C00580100"])
+cs.build
+cs.write
+</pre>
+</div>
+
+<div>
+  <h2>Another trick</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:14px;line-height:18px;">
+if __FILE__ == $0
+  cs = CommitteeSheet.new(["C00577130", "C00575795", "C00580100"])
+  cs.build
+  cs.write
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+$ ruby 10_committee_sheet.rb
+</pre>
+</div>
+
+<div>
+  <h2>We can also pass in the committee IDs from the command line</h2>
+</div>
+
+<div class="code smaller">
+<pre>
+if __FILE__ == $0
+  cs = CommitteeSheet.new(ARGV)
+  cs.build
+  cs.write
+end
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+$ ruby 10_committee_sheet.rb C00577130 C00575795 C00580100
+</pre>
+</div>
+
+
+
+
+
+<div>
   <h2>Some APIs Return Data in XML</h2>
 </div>
 
@@ -381,7 +477,7 @@ Zillow            http://goo.gl/C34lar
 </div>
 
 <div>
-  <h2>2. What is web scraping?</h2>
+  <h2>Part 2. What is web scraping?</h2>
 </div>
 
 <div>
@@ -416,7 +512,45 @@ name="document" children=[#&lt;Nokogiri::XML::DTD:0x3fda3aace5a0 name="html"&gt;
   <h2>It's not that bad!</h2>
 </div>
 
+<div>
+  <h2>http://goo.gl/SVQsko</h2>
+  <img src="./images/tn-elections.png">
+</div>
 
+<div class="code smaller">
+<pre>
+require 'restclient'
+require 'nokogiri'
+page = "http://goo.gl/SVQsko"
+
+doc = Nokogiri::HTML(RestClient.get(page))
+</pre>
+</div>
+
+<div>
+  <img src="./images/tn-elex-src.png">
+</div>
+
+
+<div class="code smaller">
+<pre>
+doc.css("table")
+=> ...
+doc.css("table").length
+=> 96
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+doc.css("table")[0]
+=> ...
+doc.css("table")[0].css("h3")
+=> ...
+doc.css("table")[0].css("h3").text
+=> "Anderson"
+</pre>
+</div>
 
 
 
