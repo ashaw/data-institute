@@ -543,6 +543,7 @@ doc.css("table").length
 
 <div class="code smaller">
 <pre>
+# get the county name
 doc.css("table")[0]
 => ...
 doc.css("table")[0].css("h3")
@@ -552,7 +553,191 @@ doc.css("table")[0].css("h3").text
 </pre>
 </div>
 
+<div class="code smaller">
+<pre>
+# get the data
+doc.css("table")[0].css("tbody").map {|q| 
+    q.css("tr").map { |q|
+       q.css("td").map {|q| 
+        q.text 
+    } 
+  }
+}
+=> [[["Donald J. Trump", "4,298", "39.98%"], ...
+</pre>
+</div>
 
+<div class="code smaller">
+<pre>
+# let's get this into a format like:
+#          cand1    cand2     cand3
+# county1  votes    votes     votes  
+# county2  votes    votes     votes
+# county3  votes    votes     votes
+</pre>
+</div>
+
+<div>
+  <h2>Step 1: Convert to JSON<br>Step 2: Convert to CSV</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+# 11_tn_elections_step1.rb
+require 'restclient'
+require 'nokogiri'
+require 'pp'
+
+#url   = "http://goo.gl/SVQsko"
+url    = "http://localhost:8000/sources/tn-elections.html"
+doc    = Nokogiri::HTML(RestClient.get(url))
+clean  = {}
+
+# each table is a county
+doc.css("table").each do |table|
+  cty_name = table.css("h3").text
+
+  ary = table.css("tr").map do |row|
+    row.css("td").map do |cell|
+      cell.text
+    end
+  end
+
+  ret = ary.reduce(Hash.new(0)) do |memo, it|
+    memo[it[0]] = it[1]
+    memo
+  end
+
+  clean[cty_name] = ret
+end
+
+pp clean
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+{"Anderson"=>
+  {"\n                Anderson\n            "=>nil,
+   "Donald J. Trump"=>"4,298",
+   "Ted Cruz"=>"2,450",
+   "Marco Rubio"=>"2,340",
+   "Ben Carson"=>"862",
+   "John R. Kasich"=>"563",
+   "Jeb Bush"=>"122",
+   "Mike Huckabee"=>"30",
+   "Rand Paul"=>"24",
+   "Carly Fiorina"=>"15",
+   "Uncommitted"=>"14",
+   "Chris Christie"=>"12",
+   "Rick Santorum"=>"10",
+   "George Pataki"=>"5",
+   "Lindsey O. Graham"=>"4",
+   "Jim Gilmore"=>"2"}
+  ...
+}
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+# 12_tn_elections_step2.rb
+require 'restclient'
+require 'nokogiri'
+require 'pp'
+
+#url   = "http://goo.gl/SVQsko"
+url    = "http://localhost:8000/sources/tn-elections.html"
+doc    = Nokogiri::HTML(RestClient.get(url))
+clean  = {}
+
+# each table is a county
+doc.css("table").each do |table|
+  cty_name = table.css("h3").text
+
+  ary = table.css("tbody").css("tr").map do |row|
+    row.css("td").map do |cell|
+      cell.text
+    end
+  end
+
+  ret = ary.reduce(Hash.new(0)) do |memo, it|
+    memo[it[0]] = it[1].gsub(/[^\d]/,"").to_i
+    memo
+  end
+
+  clean[cty_name] = ret
+end
+
+pp clean
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+{"Anderson"=>
+  {"Donald J. Trump"=>4298,
+   "Ted Cruz"=>2450,
+   "Marco Rubio"=>2340,
+   "Ben Carson"=>862,
+   "John R. Kasich"=>563,
+   "Jeb Bush"=>122,
+   "Mike Huckabee"=>30,
+   "Rand Paul"=>24,
+   "Carly Fiorina"=>15,
+   "Uncommitted"=>14,
+   "Chris Christie"=>12,
+   "Rick Santorum"=>10,
+   "George Pataki"=>5,
+   "Lindsey O. Graham"=>4,
+   "Jim Gilmore"=>2},
+  ...
+}
+</pre>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+# 13_tn_elections_step3.rb
+# everyting from exercise 12, plus ...
+
+# first line is the candidates row
+# let's assume all candidates are on the
+# ballot in all counties and grab them 
+# from the first county
+# make sure to leave a field for the 
+# county column
+csv = "county," + clean.values[0].keys.sort.join(",") + "\n"
+
+# iterate through the counties and add to the sheet
+clean.each do |name, cands|
+  row = "#{name},"
+
+  # iterate through the cands by key
+  # in order to keep them in alpha order
+  cands.keys.sort.each_with_index do |key, idx|
+    row << cands[key].to_s
+    if idx < cands.keys.length - 1
+      row << ","
+    end
+  end
+  row << "\n"
+  csv << row
+end
+
+File.open("tn_results.csv", "w") do |f|
+  f.write csv
+end
+</pre>
+</div>
+
+<div>
+<img src="./images/tn-results-sheet.png">
+</div>
+
+<div>
+  <h2>We'll do one more together</h2>
+</div>
 
 
 
