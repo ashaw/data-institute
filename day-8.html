@@ -739,6 +739,96 @@ end
   <h2>We'll do one more together</h2>
 </div>
 
+<div>
+  <h2>https://goo.gl/evoIpq</h2>
+  <img src="./images/ar-medboard.png">
+</div>
+
+<div>
+  <h2>https://goo.gl/evoIpq</h2>
+  <img src="./images/ar-medboard-src.png">
+</div>
+
+<div>
+  <h2>When you luck out</h2>
+  <img src="./images/ar-medboard-id-vs-id.png">
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+doc = Nokogiri::HTML(RestClient.get("https://goo.gl/evoIpq"))
+doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")
+</pre>
+</div>
+
+<div>
+  <h2>It's already tabular!</h2>
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+# 14_ar_medboard.rb
+require 'nokogiri'
+require 'restclient'
+
+doc = Nokogiri::HTML(RestClient.get("https://goo.gl/evoIpq"))
+table = doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")
+out = ""
+out << table.css("th").map(&:text).join(",") + "\n"
+table.css("tr")[1..-1].each do |row|
+  out << row.css("td").map(&:text).join(",") + "\n"
+end
+File.open("ar_medboard.csv", "w") {|f| f.write out }
+</pre>
+</div>
+
+<div>
+  <h2>Be careful</h2>
+  <img src="./images/ar-medboard-cols.png">
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+# 15_ar_medboard_fixed.rb
+require 'nokogiri'
+require 'restclient'
+
+doc = Nokogiri::HTML(RestClient.get("https://goo.gl/evoIpq"))
+table = doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")
+out = ""
+out << '"' + table.css("th").map(&:text).join('","') + '"' + "\n"
+table.css("tr")[1..-1].each do |row|
+  out << '"' + row.css("td").map(&:text).join('","') + '"' + "\n"
+end
+File.open("ar_medboard.csv", "w") {|f| f.write out }
+</pre>
+</div>
+
+<div>
+  <img src="./images/ar-medboard-fixed.png">
+</div>
+
+<div>
+  <h2>A few other considerations:<br>Nontabular sites</br>JavaScript sites<br>Forms</br>Sessions<br>Anti-scraping measures</h2>
+</div>
+
+
+
+<div>
+  <h2>On Your Own: Scrape a site</h2>
+</div>
+
+
+<div>
+  <h2>Homework: Finish your scraper if you didn't already</h2>
+</div>
+
+
+
+
+
+
+
 
 
 
