@@ -78,6 +78,9 @@ end
     <h2>How is this useful?</h2>
   </div>
 
+  <div>
+    <h2>Every programming language is equipped to read/write JSON</h2>
+  </div>
 
   <div>
     <h2>Try pasting it into your browser console</h2>
@@ -179,6 +182,26 @@ data = JSON.parse(resp)
 => {"status"=>"OK", "copyright"=>"Copyright (c) 2016 ProPublica Inc. All Rights Reserved." ...
   </pre>
 </div>
+
+
+  <div class="code smaller">
+  <pre style="font-size:18px;">
+# pp "pretty prints" hashes
+require 'pp'
+pp data
+{"status"=>"OK",
+ "copyright"=>"Copyright (c) 2016 ProPublica Inc. All Rights Reserved.",
+ "cycle"=>2016,
+ "base_uri"=>"https://api.propublica.org/campaign-finance/v1/2016/",
+ "results"=>
+  [{"id"=>"C00577130",
+    "name"=>"BERNIE 2016",
+    "party"=>"DEM",
+...
+  </pre>
+</div>
+
+
 
   <div class="code smaller">
   <pre style="font-size:18px;">

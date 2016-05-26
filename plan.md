@@ -6,6 +6,7 @@ Day 7: 2 hours (similar to Intro to Ruby @ NICAR: http://shaw.al.s3.amazonaws.co
   * classes/methods
   HOMEWORK: write a class that makes a routine task faster
 Day 8: 4 hour
+  * Homework presentations
   * Working with clean data in JSON/XML
   * Reading/writing files
   * using RubyGems to add more functionality to Ruby
@@ -25,4 +26,5 @@ Day 8: 4 hour
   scraper ideas:
 
   https://www.armedicalboard.org/public/notices.aspx
+  
   http://elections.tn.gov/county-results.php?OfficebyCounty=President%20of%20the%20United%20States&Party=Republican
