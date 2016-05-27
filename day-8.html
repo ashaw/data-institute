@@ -507,8 +507,71 @@ Zillow            http://goo.gl/C34lar
   <h2>We'll use what we learned with APIs to grab web resources that aren't designed to be read by computers</h2>
 </div>
 
+<div><h2>Aside: Before you scrape</h2></div>
+
 <div>
-  <h2>Tools: RestClient + Nokogiri</h2>
+  <h2>http://j.mp/la-results</h2>
+  <img src="./images/la-sos.png">
+</div>
+
+<div>
+  <h2>http://j.mp/la-results</h2>
+  <img src="./images/la-sos-viewsource.png">
+</div>
+
+
+<div>
+  <h2>Web inspector</h2>
+  <img src="./images/la-sos-inspector.png">
+</div>
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+  ...
+    }, {
+      "ID": "51751",
+      "SpecificTitle": "Presidential Nominee -- Republican Party",
+      "GeneralTitle": "Republican Presidential Nominee",
+      "OfficeLevel": "060",
+      "IsMultiParish": "1",
+      "NumberToBeElected": "1",
+      "SummaryText": null,
+      "FullText": null,
+      "IsClosedParty": "1",
+      "Choice": [{
+        "Color": "0x8970cb",
+        "ID": "99554",
+        "Desc": "\"Jeb\" Bush (REP)"
+      }, {
+  ...
+</pre>
+</div>  
+
+<div class="code smaller">
+<pre style="font-size:18px;">
+{
+  "Parishes": {
+    "VersionDateTime": "1900-01-01T00:00:00",
+    "Parish": [{
+      "ParishValue": "01",
+      "PrecinctsReporting": "55",
+      "PrecinctsExpected": "55",
+      "NumAbsenteeReporting": "1",
+      "NumAbsenteeExpected": "1",
+      "VoterCountQualified": "10466",
+      "VoterCountVoted": "3581",
+      "Choice": [{
+        "ID": "99554",
+        "VoteTotal": "24",
+        "Outcome": "Defeated"
+      }, {
+  ...
+</pre>
+</div>  
+
+
+<div>
+  <h2>Scraping Tools: RestClient + Nokogiri</h2>
 </div>
 
 <div class="code">
@@ -539,6 +602,7 @@ name="document" children=[#&lt;Nokogiri::XML::DTD:0x3fda3aace5a0 name="html"&gt;
   <h2>http://goo.gl/SVQsko</h2>
   <img src="./images/tn-elections.png">
 </div>
+
 
 <div class="code smaller">
 <pre>
@@ -835,7 +899,9 @@ File.open("ar_medboard.csv", "w") {|f| f.write out }
   <h2>A few other considerations:<br>Nontabular sites</br>JavaScript sites<br>Forms</br>Sessions<br>Anti-scraping measures</h2>
 </div>
 
-
+<div>
+  <h2>TK examples for some of these</h2>
+</div>
 
 <div>
   <h2>On Your Own: Scrape a site</h2>
