@@ -117,14 +117,14 @@ roll["Shanahan"]
 
   <div class="code">
     <pre>
-$ gem install restclient
+$ gem install rest-client
     </pre>
   </div>
 
 
   <div class="code smaller">
     <pre>
-require 'restclient'
+require 'rest-client'
 RestClient.get("http://google.com")
 => "&lt;!doctype html&gt;&lt;html itemscope=\"\" itemtype...
     </pre>
@@ -167,7 +167,7 @@ https://api.propublica.org/campaign-finance/v1/2016/committees/C00577130.json
 
   <div class="code smaller">
   <pre style="font-size:18px;">
-require 'restclient'
+require 'rest-client'
 
 url = "https://api.propublica.org/campaign-finance/v1/2016/committees/C00577130.json"
 key = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
@@ -221,7 +221,7 @@ data['results'][0]['total_contributions']
 <div class="code smaller">
 <pre style="font-size:14px;line-height:18px;">
 # 8_campaign_contributions.rb
-require 'restclient'
+require 'rest-client'
 require 'json'
 
 KEY = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
@@ -343,7 +343,7 @@ Willis Abernathy,Adolphus Terry,Ms. Adam Grady,Mattie Goodwin MD,Leslie Miller
 <div class="code smaller">
 <pre style="font-size:14px;line-height:18px;">
 # 10_committee_sheet.rb
-require 'restclient'
+require 'rest-client'
 require 'json'
 
 KEY = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
@@ -445,7 +445,7 @@ $ gem install crack
 <div class="code">
 <pre>
 require 'crack'
-require 'restclient'
+require 'rest-client'
 </pre>
 </div>
 
@@ -582,7 +582,7 @@ $ gem install nokogiri
 
 <div class="code smaller">
 <pre style="font-size:18px;">
-require 'restclient'
+require 'rest-client'
 require 'nokogiri'
 resp = Nokogiri::HTML(RestClient.get("http://google.com"))
 => #&lt;Nokogiri::HTML::Document:0x3fda3aace8fc 
@@ -606,7 +606,7 @@ name="document" children=[#&lt;Nokogiri::XML::DTD:0x3fda3aace5a0 name="html"&gt;
 
 <div class="code smaller">
 <pre>
-require 'restclient'
+require 'rest-client'
 require 'nokogiri'
 page = "http://goo.gl/SVQsko"
 
@@ -671,7 +671,7 @@ doc.css("table")[0].css("tbody").map {|q|
 <div class="code smaller">
 <pre style="font-size:18px;">
 # 11_tn_elections_step1.rb
-require 'restclient'
+require 'rest-client'
 require 'nokogiri'
 require 'pp'
 
@@ -729,7 +729,7 @@ pp clean
 <div class="code smaller">
 <pre style="font-size:18px;">
 # 12_tn_elections_step2.rb
-require 'restclient'
+require 'rest-client'
 require 'nokogiri'
 require 'pp'
 
@@ -856,7 +856,7 @@ doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")
 <pre style="font-size:18px;">
 # 14_ar_medboard.rb
 require 'nokogiri'
-require 'restclient'
+require 'rest-client'
 
 doc = Nokogiri::HTML(RestClient.get("https://goo.gl/evoIpq"))
 table = doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")
@@ -878,7 +878,7 @@ File.open("ar_medboard.csv", "w") {|f| f.write out }
 <pre style="font-size:18px;">
 # 15_ar_medboard_fixed.rb
 require 'nokogiri'
-require 'restclient'
+require 'rest-client'
 
 doc = Nokogiri::HTML(RestClient.get("https://goo.gl/evoIpq"))
 table = doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")

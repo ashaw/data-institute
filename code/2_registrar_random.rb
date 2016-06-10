@@ -14,6 +14,7 @@ class Student
   }
 
   def random_list
+    # ["Kovacek", "Shanahan", "Ankunding", "Streich", "Marks"]
     @@teachers.keys.shuffle
   end
 
@@ -30,3 +31,6 @@ class Student
     end
   end
 end
+
+s = Student.new("Al", 10)
+s.assign_teacher

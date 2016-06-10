@@ -1,5 +1,5 @@
 require 'nokogiri'
-require 'restclient'
+require 'rest-client'
 
 doc = Nokogiri::HTML(RestClient.get("https://goo.gl/evoIpq"))
 table = doc.css("#ctl00_ctl00_MainContentPlaceHolder_innercontent_gvLicNotices")

@@ -1,4 +1,4 @@
-require 'restclient'
+require 'rest-client'
 require 'json'
 
 KEY = "qQ6CXg1UQg1xJ7gNXvXZW9qeE99QNAOY2Sn3TKw2"
