@@ -2,8 +2,7 @@ require 'rest-client'
 require 'nokogiri'
 require 'pp'
 
-#url   = "http://goo.gl/SVQsko"
-url    = "http://localhost:8000/sources/tn-elections.html"
+url   = "http://goo.gl/SVQsko"
 doc    = Nokogiri::HTML(RestClient.get(url))
 clean  = {}
 
@@ -17,12 +16,14 @@ doc.css("table").each do |table|
     end
   end
 
-  ret = ary.reduce(Hash.new(0)) do |memo, it|
-    memo[it[0]] = it[1].gsub(/[^\d]/,"").to_i
-    memo
+  cty = {}
+  ary.each do |cells|
+    # cells[0] is candidate name
+    # cells[1] is votes
+    cty[cells[0]] = cells[1].gsub(/[^\d]/,"").to_i
   end
 
-  clean[cty_name] = ret
+  clean[cty_name] = cty
 end
 
 pp clean

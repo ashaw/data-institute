@@ -643,13 +643,13 @@ doc.css("table")[0].css("h3").text
 <div class="code smaller">
 <pre>
 # get the data
-doc.css("table")[0].css("tbody").map {|q| 
-    q.css("tr").map { |q|
-       q.css("td").map {|q| 
+doc.css("table")[0].css("tbody").map  do |q| 
+    q.css("tr").map do |q|
+       q.css("td").map do |q| 
         q.text 
-    } 
-  }
-}
+    end 
+  end
+end
 => [[["Donald J. Trump", "4,298", "39.98%"], ...
 </pre>
 </div>
@@ -675,8 +675,7 @@ require 'rest-client'
 require 'nokogiri'
 require 'pp'
 
-#url   = "http://goo.gl/SVQsko"
-url    = "http://localhost:8000/sources/tn-elections.html"
+url   = "http://goo.gl/SVQsko"
 doc    = Nokogiri::HTML(RestClient.get(url))
 clean  = {}
 
@@ -690,12 +689,14 @@ doc.css("table").each do |table|
     end
   end
 
-  ret = ary.reduce(Hash.new(0)) do |memo, it|
-    memo[it[0]] = it[1]
-    memo
+  cty = {}
+  ary.each do |cells|
+    # cells[0] is candidate name
+    # cells[1] is votes
+    cty[cells[0]] = cells[1]
   end
 
-  clean[cty_name] = ret
+  clean[cty_name] = cty
 end
 
 pp clean
@@ -733,8 +734,7 @@ require 'rest-client'
 require 'nokogiri'
 require 'pp'
 
-#url   = "http://goo.gl/SVQsko"
-url    = "http://localhost:8000/sources/tn-elections.html"
+url   = "http://goo.gl/SVQsko"
 doc    = Nokogiri::HTML(RestClient.get(url))
 clean  = {}
 
@@ -748,12 +748,14 @@ doc.css("table").each do |table|
     end
   end
 
-  ret = ary.reduce(Hash.new(0)) do |memo, it|
-    memo[it[0]] = it[1].gsub(/[^\d]/,"").to_i
-    memo
+  cty = {}
+  ary.each do |cells|
+    # cells[0] is candidate name
+    # cells[1] is votes
+    cty[cells[0]] = cells[1].gsub(/[^\d]/,"").to_i
   end
 
-  clean[cty_name] = ret
+  clean[cty_name] = cty
 end
 
 pp clean
