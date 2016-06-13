@@ -642,12 +642,19 @@ doc.css("table")[0].css("h3").text
 
 <div class="code smaller">
 <pre>
-# get the data
+doc.css("table")[0].css("tbody")[0].css("tr")[0].css("td")[0].text
+=> "Donald J. Trump"
+</pre>
+</div>
+
+<div class="code smaller">
+<pre>
+# do it for the whole table
 doc.css("table")[0].css("tbody").map do |q| 
     q.css("tr").map do |q|
        q.css("td").map do |q| 
-        q.text 
-    end 
+          q.text 
+    end
   end
 end
 => [[["Donald J. Trump", "4,298", "39.98%"], ...
