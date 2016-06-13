@@ -651,9 +651,9 @@ doc.css("table")[0].css("tbody")[0].css("tr")[0].css("td")[0].text
 <pre>
 # do it for the whole table
 doc.css("table")[0].css("tbody").map do |q| 
-    q.css("tr").map do |q|
-       q.css("td").map do |q| 
-          q.text 
+  q.css("tr").map do |q|
+    q.css("td").map do |q| 
+      q.text 
     end
   end
 end
